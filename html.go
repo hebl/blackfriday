@@ -345,6 +345,7 @@ func (options *Html) TableCell(out *bytes.Buffer, text []byte, align int) {
 func (options *Html) Footnotes(out *bytes.Buffer, text func() bool) {
 	out.WriteString("<div class=\"footnotes\">\n")
 	options.HRule(out)
+	out.WriteString("<h3>參 考</h3>")
 	options.List(out, text, LIST_TYPE_ORDERED)
 	out.WriteString("</div>\n")
 }
@@ -517,7 +518,7 @@ func (options *Html) Image(out *bytes.Buffer, link []byte, title []byte, alt []b
 		return
 	}
 
-	out.WriteString("<img src=\"")
+	out.WriteString("<div class=\"image-block\"><img src=\"")
 	options.maybeWriteAbsolutePrefix(out, link)
 	attrEscape(out, link)
 	out.WriteString("\" alt=\"")
@@ -531,6 +532,12 @@ func (options *Html) Image(out *bytes.Buffer, link []byte, title []byte, alt []b
 
 	out.WriteByte('"')
 	out.WriteString(options.closeTag)
+	if len(title) > 0 {
+		out.WriteString("<br/>\n<div class=\"image-caption\">")
+		out.Write(title)
+		out.WriteString("</div>")
+	}
+	out.WriteString("</div>")
 }
 
 func (options *Html) LineBreak(out *bytes.Buffer) {
